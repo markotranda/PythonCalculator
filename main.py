@@ -4,15 +4,15 @@ import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import WINDOW_CLOSED
 
 class Calculator:
-    value: str
-    value_stack: List
-    for_reset: bool
+    __value: str
+    __value_stack: List
+    __for_reset: bool
 
     def __init__(self) -> None:
         self.__button_reset()
 
     def __str__(self) -> str:
-        return self.value
+        return self.__value
 
     def button_press(self, event):
         if event in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
@@ -29,52 +29,52 @@ class Calculator:
             self.__calculate_value_stack()
 
     def __button_comma(self):
-        if not '.' in self.value:
-            self.value += '.'
+        if not '.' in self.__value:
+            self.__value += '.'
             
     def __button_digit(self, input):
-        if self.value == '0' or self.for_reset:
-            self.value = input
+        if self.__value == '0' or self.__for_reset:
+            self.__value = input
         else:
-            self.value += input
-        self.for_reset = False
+            self.__value += input
+        self.__for_reset = False
     
     def __button_sign(self):
-        if float(self.value) > 0:
-            self.value = '-' + self.value
+        if float(self.__value) > 0:
+            self.__value = '-' + self.__value
         else:
-            self.value = self.value[1:]
+            self.__value = self.__value[1:]
 
     def __button_operator(self, operator):
         self.__calculate_value_stack()
-        self.value_stack.append(self.value)
-        self.value_stack.append(operator)
-        self.for_reset = True
+        self.__value_stack.append(self.__value)
+        self.__value_stack.append(operator)
+        self.__for_reset = True
         
     def __calculate_value_stack(self):
-        self.value_stack.append(self.value)
-        if len(self.value_stack) >= 3:
-            value2 = self.value_stack.pop()
-            operator = self.value_stack.pop()
-            value1 = self.value_stack.pop()
+        self.__value_stack.append(self.__value)
+        if len(self.__value_stack) >= 3:
+            value2 = self.__value_stack.pop()
+            operator = self.__value_stack.pop()
+            value1 = self.__value_stack.pop()
 
             if operator == '+':
-                self.value_stack.append(f'{float(value1) + float(value2)}')
+                self.__value_stack.append(f'{float(value1) + float(value2)}')
             elif operator == '-':
-                self.value_stack.append(f'{float(value1) - float(value2)}')
+                self.__value_stack.append(f'{float(value1) - float(value2)}')
             elif operator == '*':
-                self.value_stack.append(f'{float(value1) * float(value2)}')
+                self.__value_stack.append(f'{float(value1) * float(value2)}')
             elif operator == '/':
-                self.value_stack.append(f'{float(value1) / float(value2)}')
+                self.__value_stack.append(f'{float(value1) / float(value2)}')
             elif operator == '%':
-                self.value_stack.append(f'{(float(value1)/100) * float(value2)}')
-                
-        self.value = self.value_stack.pop()
+                self.__value_stack.append(f'{(float(value1)/100) * float(value2)}')
+
+        self.__value = self.__value_stack.pop()
     
     def __button_reset(self):
-        self.value = '0'
-        self.value_stack = []
-        self.for_reset = False
+        self.__value = '0'
+        self.__value_stack = []
+        self.__for_reset = False
 
 def main():
     calculator = Calculator()
